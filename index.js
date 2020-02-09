@@ -44,10 +44,7 @@ let appData = {
     expensesMonth: 0,       // Расход в месяц 
     
     start: function() {
-        if (salaryAmount.value === '') {
-            alert('Ошибка, поле месячный доход должно быть заполнено!');
-            return;
-        }
+        
         appData.budget = +salaryAmount.value;
         appData.getExpenses();
         appData.getIncome();
@@ -65,7 +62,10 @@ let appData = {
         additionalExpensesValue.value = appData.addExpenses.join(', ');
         additionalIncomeValue.value = appData.addIncome.join(', ');
         targetMonthValue.value = Math.ceil(appData.getTargetMonth());
+
         incomePeriodValue.value = appData.calcPeriod();
+        periodSelect.addEventListener('change', appData.start);
+        
     },
     addIncomeBlock: function() {
         let cloneIncomeItem = incomeItems[0].cloneNode(true);
@@ -116,7 +116,7 @@ let appData = {
             if (itemValue !== '') {
                 appData.addIncome.push(itemValue);
             }
-        })
+        });
     },
     getExpensesMonth: function() {           // Все обяз. расходы в месяц
         
@@ -163,15 +163,34 @@ let appData = {
     },
     calcPeriod: function() {
         return appData.budgetMonth * periodSelect.value;
+    },
+    stepPeriod: function(){
+        let titlePeriod = document.querySelector('.period-amount');
+        titlePeriod.textContent = periodSelect.value;
+    },
+    theButton: function() {
+        startButton.disabled = true;
+        console.log(salaryAmount.value);
+        
+        if (salaryAmount.value !== '') {
+            startButton.disabled = false;
+        } 
     }
 };
+appData.theButton();
 startButton.addEventListener('click', appData.start);
+salaryAmount.addEventListener('change', appData.theButton);
+periodSelect.addEventListener('click', appData.stepPeriod);
 expensesPlus.addEventListener('click', appData.addExpensesBlock);
 incomePlus.addEventListener('click', appData.addIncomeBlock);
+
+
         //  Срок достижение цели
 appData.getTargetMonth();
+
         // Заработок в сутки с учетом расходов
 appData.getStatusIncome();
+
 let stringExpenses = function(){
     let itemsExpenses = '';
     for (let i = 0; i < appData.addExpenses.length; i++) {
@@ -184,16 +203,6 @@ let stringExpenses = function(){
     console.log(itemsExpenses);
 };
 stringExpenses();
-/* 
-+ 1) Переписать метод getIncome аналогично getExpenses
-+ 2) Создать метод addIncomeBlock аналогичный addExpensesBlock
-+ 3) Округлить вывод дневного бюджета
-4) Число под полоской (input type range) должно меняться в зависимости от позиции range, используем событие input.
-5) Добавить обработчик события внутри метода showResult, который будет отслеживать период и сразу менять значение
-    в поле “Накопления за период” (После нажатия кнопки рассчитать, если меняем ползунок в range,
-    “Накопления за период” меняются динамически аналогично 4-ому пункту)
-6) Запретить нажатие кнопки Рассчитать пока поле Месячный доход пустой, проверку поля
- Месячный доход в методе Start убрать.
-*/
+
 
 
