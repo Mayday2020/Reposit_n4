@@ -69,11 +69,20 @@ let appData = {
         
     },
     blocked: function() {
-        document.querySelector('input[type=text]').forEach(function(item){
+        document.querySelectorAll('input[type=text]').forEach(function(item){
             item.disabled = true;
         }.bind(appData));
-        this.start.style.display = 'none';
+        startButton.style.display = 'none';
         cancel.style.display = 'block';
+        
+    },
+    reset: function () {
+        document.querySelectorAll('input[type=text]').forEach(function(item){
+            item.disabled = false;
+            item.value = null;
+        }.bind(appData));
+        cancel.style.display = 'none';
+        startButton.style.display = 'block';
     },
     addIncomeBlock: function() {
         let cloneIncomeItem = incomeItems[0].cloneNode(true);
@@ -191,7 +200,7 @@ salaryAmount.addEventListener('input', appData.theButton.bind(appData));
 periodSelect.addEventListener('input', appData.stepPeriod.bind(appData));
 expensesPlus.addEventListener('click', appData.addExpensesBlock.bind(appData));
 incomePlus.addEventListener('click', appData.addIncomeBlock.bind(appData));
-
+cancel.addEventListener('click', appData.reset.bind(appData));
 
         //  Срок достижение цели
 appData.getTargetMonth();
